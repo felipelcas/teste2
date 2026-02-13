@@ -1,0 +1,1847 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PriorizAI - Organize suas tarefas com inteligência</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Modern Professional Palette */
+            --bg-primary: #000000;
+            --bg-secondary: #0a0a0f;
+            --bg-elevated: #111118;
+            --accent-teal: #00e5cc;
+            --accent-cyan: #00fff0;
+            --accent-purple: #8b5cf6;
+            --accent-violet: #a78bfa;
+            --accent-pink: #ff006e;
+            --accent-magenta: #ff0080;
+            --text-primary: #ffffff;
+            --text-secondary: #e2e8f0;
+            --text-muted: #64748b;
+            --glow-teal: rgba(0, 229, 204, 0.35);
+            --glow-purple: rgba(139, 92, 246, 0.3);
+            --glow-pink: rgba(255, 0, 110, 0.25);
+            --border: rgba(148, 163, 184, 0.08);
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes colorShift {
+            0%, 100% { filter: hue-rotate(0deg); }
+            50% { filter: hue-rotate(10deg); }
+        }
+
+        @keyframes borderGlow {
+            0%, 100% { 
+                border-color: rgba(0, 229, 204, 0.3);
+                box-shadow: 0 0 20px rgba(0, 229, 204, 0.1);
+            }
+            33% { 
+                border-color: rgba(139, 92, 246, 0.3);
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.1);
+            }
+            66% { 
+                border-color: rgba(255, 0, 110, 0.3);
+                box-shadow: 0 0 20px rgba(255, 0, 110, 0.1);
+            }
+        }
+
+        body {
+            font-family: 'Space Grotesk', -apple-system, system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Complex animated background with multiple colors */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(0, 229, 204, 0.08) 0%, transparent 35%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.06) 0%, transparent 35%),
+                radial-gradient(circle at 50% 50%, rgba(255, 0, 110, 0.04) 0%, transparent 40%);
+            animation: float 25s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Neural network pattern */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(0deg, rgba(0, 229, 204, 0.02) 0px, transparent 1px, transparent 100px, rgba(0, 229, 204, 0.02) 101px),
+                repeating-linear-gradient(90deg, rgba(139, 92, 246, 0.02) 0px, transparent 1px, transparent 100px, rgba(139, 92, 246, 0.02) 101px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin-bottom: 5rem;
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        /* Multi-color glow background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            background: 
+                radial-gradient(circle, var(--glow-teal) 0%, transparent 50%),
+                radial-gradient(circle at 60% 40%, var(--glow-purple) 0%, transparent 50%);
+            opacity: 0.2;
+            pointer-events: none;
+            animation: pulse 6s ease-in-out infinite;
+            filter: blur(60px);
+        }
+
+        /* Iridescent orb effect */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: 
+                radial-gradient(circle at 30% 30%, rgba(0, 229, 204, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 70% 70%, rgba(255, 0, 110, 0.1) 0%, transparent 40%);
+            opacity: 0.3;
+            pointer-events: none;
+            animation: colorShift 8s ease-in-out infinite;
+            filter: blur(40px);
+            border-radius: 50%;
+        }
+
+        /* Logo with split styling */
+        .logo-wrapper {
+            display: inline-block;
+            position: relative;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.8s ease-out;
+            z-index: 2;
+        }
+
+        .logo {
+            font-family: 'Sora', sans-serif;
+            font-size: 6rem;
+            font-weight: 800;
+            letter-spacing: -0.04em;
+            position: relative;
+            display: inline-block;
+            line-height: 1;
+        }
+
+        .logo-prioriz {
+            background: linear-gradient(135deg, #00e5cc 0%, #00fff0 30%, #0dd9c9 60%, #00e5cc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline;
+            filter: drop-shadow(0 0 30px rgba(0, 229, 204, 0.4));
+        }
+
+        .logo-ai {
+            background: linear-gradient(135deg, #a78bfa 0%, #ff006e 50%, #ff0080 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: inline;
+            position: relative;
+            animation: shimmer 4s ease-in-out infinite;
+            background-size: 200% auto;
+            filter: drop-shadow(0 0 30px rgba(255, 0, 110, 0.5));
+        }
+
+        .logo-ai::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 10px;
+            height: 10px;
+            background: radial-gradient(circle, var(--accent-pink) 0%, var(--accent-magenta) 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 20px var(--accent-pink),
+                0 0 40px rgba(255, 0, 110, 0.5);
+            animation: pulse 2.5s ease-in-out infinite;
+        }
+
+        /* Decorative elements - advanced */
+        .hero-decoration {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .circuit-1 {
+            top: 8%;
+            left: 3%;
+            width: 180px;
+            height: 180px;
+            border: 2px solid rgba(0, 229, 204, 0.15);
+            border-radius: 50%;
+            animation: rotate 35s linear infinite;
+        }
+
+        .circuit-1::before {
+            content: '';
+            position: absolute;
+            top: 15%;
+            left: 15%;
+            width: 70%;
+            height: 70%;
+            border: 1px solid rgba(139, 92, 246, 0.15);
+            border-radius: 50%;
+        }
+
+        .circuit-1::after {
+            content: '';
+            position: absolute;
+            top: 30%;
+            left: 30%;
+            width: 40%;
+            height: 40%;
+            border: 1px solid rgba(255, 0, 110, 0.15);
+            border-radius: 50%;
+        }
+
+        .circuit-2 {
+            bottom: 8%;
+            right: 3%;
+            width: 220px;
+            height: 220px;
+            border: 2px solid rgba(139, 92, 246, 0.15);
+            border-radius: 50%;
+            animation: rotate 45s linear infinite reverse;
+        }
+
+        .circuit-2::before {
+            content: '';
+            position: absolute;
+            top: 12%;
+            left: 12%;
+            width: 76%;
+            height: 76%;
+            border: 1px solid rgba(0, 229, 204, 0.15);
+            border-radius: 50%;
+        }
+
+        .circuit-2::after {
+            content: '';
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            border: 1px solid rgba(255, 0, 110, 0.15);
+            border-radius: 50%;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-weight: 500;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+            position: relative;
+            z-index: 2;
+        }
+
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(17, 17, 24, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            backdrop-filter: blur(20px);
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .privacy-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 229, 204, 0.1), rgba(139, 92, 246, 0.1));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .privacy-badge:hover {
+            border-color: rgba(0, 229, 204, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .privacy-badge:hover::before {
+            opacity: 1;
+        }
+
+        .privacy-icon {
+            width: 24px;
+            height: 24px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            box-shadow: 0 0 20px var(--glow-teal);
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Tab Navigation - Redesigned with gradient borders */
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 2;
+        }
+
+        .tab-item {
+            position: relative;
+            padding: 1rem 2rem;
+            background: rgba(17, 17, 24, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            font-family: 'Sora', sans-serif;
+            overflow: hidden;
+        }
+
+        .tab-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple), var(--accent-pink));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .tab-item span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .tab-item.active {
+            background: linear-gradient(135deg, rgba(0, 229, 204, 0.15), rgba(139, 92, 246, 0.1));
+            border-color: var(--accent-teal);
+            color: var(--accent-teal);
+            box-shadow: 
+                0 0 30px rgba(0, 229, 204, 0.2),
+                inset 0 0 30px rgba(0, 229, 204, 0.05);
+        }
+
+        .tab-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+            box-shadow: 0 0 10px var(--glow-teal);
+        }
+
+        .tab-item:not(.active):hover {
+            background: rgba(17, 17, 24, 0.8);
+            border-color: rgba(0, 229, 204, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-item:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        /* Main Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            align-items: start;
+        }
+
+        /* Card System with prismatic effects */
+        .card {
+            background: rgba(17, 17, 24, 0.7);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            backdrop-filter: blur(20px);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            animation: slideInLeft 0.8s ease-out;
+        }
+
+        /* Gradient top border */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                var(--accent-teal) 20%, 
+                var(--accent-purple) 50%, 
+                var(--accent-pink) 80%, 
+                transparent);
+            opacity: 0.5;
+        }
+
+        /* Subtle corner glow */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, var(--glow-purple) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 229, 204, 0.2);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5), 
+                0 0 40px rgba(0, 229, 204, 0.05),
+                inset 0 1px 0 rgba(0, 229, 204, 0.1);
+        }
+
+        .card:hover::after {
+            opacity: 0.3;
+        }
+
+        .card.results-card {
+            animation: slideInRight 0.8s ease-out;
+            position: sticky;
+            top: 2rem;
+            max-height: calc(100vh - 4rem);
+            overflow-y: auto;
+        }
+
+        .card.results-card::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .card.results-card::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .card.results-card::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-teal), var(--accent-purple));
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--glow-teal);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 
+                0 0 30px var(--glow-teal),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2);
+            position: relative;
+        }
+
+        .card-icon::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple), var(--accent-pink));
+            border-radius: 14px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover .card-icon::after {
+            opacity: 0.3;
+        }
+
+        .card-title {
+            font-family: 'Sora', sans-serif;
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+        }
+
+        /* Form Elements */
+        .form-section {
+            margin-bottom: 2.5rem;
+        }
+
+        .section-label {
+            font-family: 'Sora', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-label::before {
+            content: '';
+            width: 4px;
+            height: 16px;
+            background: linear-gradient(180deg, var(--accent-teal), var(--accent-purple));
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--glow-teal);
+        }
+
+        label {
+            display: block;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .required {
+            color: var(--accent-pink);
+            margin-left: 0.25rem;
+        }
+
+        input[type="text"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--accent-teal);
+            background: rgba(0, 0, 0, 0.6);
+            box-shadow: 
+                0 0 0 3px rgba(0, 229, 204, 0.1), 
+                0 0 30px rgba(0, 229, 204, 0.05),
+                inset 0 1px 0 rgba(0, 229, 204, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: var(--text-muted);
+        }
+
+        /* Method Selection Cards */
+        .method-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .method-card {
+            padding: 1.25rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .method-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 229, 204, 0.08), rgba(139, 92, 246, 0.05));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .method-card.active {
+            background: linear-gradient(135deg, rgba(0, 229, 204, 0.15), rgba(139, 92, 246, 0.08));
+            border-color: var(--accent-teal);
+            box-shadow: 
+                0 0 30px rgba(0, 229, 204, 0.15), 
+                inset 0 0 30px rgba(0, 229, 204, 0.03),
+                inset 0 1px 0 rgba(0, 229, 204, 0.2);
+        }
+
+        .method-card.active::before {
+            opacity: 1;
+        }
+
+        .method-card.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-teal), var(--accent-purple), transparent);
+            box-shadow: 0 0 10px var(--glow-teal);
+        }
+
+        .method-card.disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .method-card:not(.disabled):not(.active):hover {
+            border-color: rgba(0, 229, 204, 0.3);
+            background: rgba(0, 229, 204, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .method-name {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .method-desc {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .help-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: var(--bg-primary);
+            border-radius: 50%;
+            font-size: 0.7rem;
+            font-weight: 900;
+            cursor: help;
+            font-family: 'JetBrains Mono', monospace;
+            box-shadow: 0 2px 8px var(--glow-teal);
+        }
+
+        /* Hint and Info */
+        .hint-text {
+            font-size: 0.8125rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .info-alert {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 1.25rem;
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.08), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(255, 0, 110, 0.2);
+            border-left: 4px solid var(--accent-pink);
+            border-radius: 12px;
+            font-size: 0.875rem;
+            background: linear-gradient(90deg, var(--accent-pink), var(--accent-magenta));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-alert::before {
+            content: '⚡';
+            font-size: 1.5rem;
+            filter: drop-shadow(0 0 10px rgba(255, 0, 110, 0.6));
+            -webkit-text-fill-color: var(--accent-pink);
+        }
+
+        .info-alert::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        /* Task Container */
+        .tasks-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .tasks-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .tasks-container::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        .tasks-container::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--accent-teal), var(--accent-purple));
+            border-radius: 3px;
+            box-shadow: 0 0 10px var(--glow-teal);
+        }
+
+        .task-item {
+            background: linear-gradient(135deg, rgba(17, 17, 24, 0.8), rgba(26, 26, 36, 0.6));
+            border: 1px solid var(--border);
+            border-left: 3px solid var(--accent-teal);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-teal), var(--accent-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .task-item:hover {
+            border-color: rgba(0, 229, 204, 0.3);
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9), rgba(17, 17, 24, 0.8));
+            transform: translateX(4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 229, 204, 0.05);
+        }
+
+        .task-item:hover::before {
+            opacity: 1;
+        }
+
+        .task-item:nth-child(even) {
+            border-left-color: var(--accent-purple);
+        }
+
+        .task-item:nth-child(3n) {
+            border-left-color: var(--accent-pink);
+        }
+
+        .task-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        /* Buttons with advanced effects */
+        .btn {
+            padding: 1.125rem 2rem;
+            border: none;
+            border-radius: 12px;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple));
+            color: var(--bg-primary);
+            box-shadow: 
+                0 4px 20px rgba(0, 229, 204, 0.3),
+                0 0 40px rgba(0, 229, 204, 0.2);
+            position: relative;
+        }
+
+        .btn-primary::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 12px;
+            padding: 2px;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple), var(--accent-pink));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 30px rgba(0, 229, 204, 0.4),
+                0 0 60px rgba(0, 229, 204, 0.3);
+        }
+
+        .btn-primary:hover::after {
+            opacity: 0.5;
+        }
+
+        .btn-primary:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: rgba(17, 17, 24, 0.6);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(17, 17, 24, 0.8);
+            border-color: rgba(0, 229, 204, 0.3);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .task-counter {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        /* Results Section */
+        .result-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-muted);
+        }
+
+        .result-empty-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.2;
+            filter: grayscale(1);
+        }
+
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            gap: 2rem;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid transparent;
+            border-top-color: var(--accent-teal);
+            border-right-color: var(--accent-purple);
+            border-bottom-color: var(--accent-pink);
+            border-radius: 50%;
+            animation: rotate 1s linear infinite;
+            box-shadow: 
+                0 0 30px rgba(0, 229, 204, 0.3),
+                0 0 50px rgba(139, 92, 246, 0.2);
+            position: relative;
+        }
+
+        .spinner::after {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 2px solid transparent;
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: rotate 1.5s linear infinite reverse;
+        }
+
+        .loading-text {
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .result-header {
+            background: linear-gradient(135deg, rgba(0, 229, 204, 0.1), rgba(139, 92, 246, 0.05));
+            border: 1px solid rgba(0, 229, 204, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-teal), var(--accent-purple), transparent);
+            box-shadow: 0 0 10px var(--glow-teal);
+        }
+
+        .result-message {
+            font-size: 1.25rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.75rem;
+        }
+
+        .result-summary {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .result-stat {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 8px;
+            color: var(--success);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        /* Order Table */
+        .order-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin-bottom: 2rem;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        .order-table thead {
+            background: linear-gradient(135deg, rgba(0, 229, 204, 0.15), rgba(139, 92, 246, 0.08));
+            position: relative;
+        }
+
+        .order-table thead::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-teal), var(--accent-purple), transparent);
+        }
+
+        .order-table th {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            font-family: 'Sora', sans-serif;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 0.8125rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .order-table td {
+            padding: 1rem 1.25rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .order-table tbody tr {
+            transition: background 0.3s ease;
+        }
+
+        .order-table tbody tr:hover {
+            background: rgba(0, 229, 204, 0.05);
+        }
+
+        /* Ranked Items */
+        .ranked-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .ranked-item {
+            background: linear-gradient(135deg, rgba(17, 17, 24, 0.8), rgba(10, 10, 15, 0.8));
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent-teal);
+            border-radius: 16px;
+            padding: 1.75rem;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ranked-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-teal), var(--accent-purple), var(--accent-pink));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .ranked-item:hover {
+            border-color: rgba(0, 229, 204, 0.3);
+            background: linear-gradient(135deg, rgba(26, 26, 36, 0.9), rgba(17, 17, 24, 0.9));
+            transform: translateX(6px);
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.4), 
+                0 0 30px rgba(0, 229, 204, 0.1),
+                inset 0 1px 0 rgba(0, 229, 204, 0.1);
+        }
+
+        .ranked-item:hover::before {
+            opacity: 1;
+        }
+
+        .ranked-item:nth-child(1) {
+            border-left-color: #fbbf24;
+            box-shadow: 0 4px 20px rgba(251, 191, 36, 0.15);
+        }
+
+        .ranked-item:nth-child(2) {
+            border-left-color: var(--accent-teal);
+        }
+
+        .ranked-item:nth-child(3) {
+            border-left-color: var(--accent-purple);
+        }
+
+        .ranked-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .rank-number {
+            font-family: 'Sora', sans-serif;
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-teal), var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            min-width: 60px;
+            line-height: 1;
+            filter: drop-shadow(0 0 20px rgba(0, 229, 204, 0.3));
+        }
+
+        .rank-title {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+        }
+
+        .rank-explanation {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.25rem;
+        }
+
+        .key-points {
+            list-style: none;
+            margin-bottom: 1.25rem;
+        }
+
+        .key-points li {
+            padding-left: 2rem;
+            position: relative;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+            font-size: 0.9375rem;
+            line-height: 1.6;
+        }
+
+        .key-points li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .rank-tip {
+            background: rgba(0, 229, 204, 0.05);
+            border-left: 3px solid var(--accent-teal);
+            padding: 0.875rem 1.25rem;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            color: var(--text-muted);
+            font-style: italic;
+            line-height: 1.6;
+            position: relative;
+        }
+
+        .rank-tip::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent-teal), var(--accent-purple));
+            border-radius: 3px 0 0 3px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card.results-card {
+                position: static;
+                max-height: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .logo {
+                font-size: 4rem;
+            }
+
+            .tagline {
+                font-size: 1.125rem;
+            }
+
+            .hero {
+                padding: 2rem 0;
+                margin-bottom: 3rem;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .tab-item {
+                width: 100%;
+                text-align: center;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .method-grid,
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            .rank-number {
+                font-size: 2.5rem;
+            }
+
+            .circuit-1,
+            .circuit-2 {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-decoration circuit-1"></div>
+            <div class="hero-decoration circuit-2"></div>
+            
+            <div class="logo-wrapper">
+                <h1 class="logo">
+                    <span class="logo-prioriz">Prioriz</span><span class="logo-ai">AI</span>
+                </h1>
+            </div>
+
+            <p class="tagline">
+                Você escreve suas tarefas. Eu coloco na melhor ordem e explico de um jeito fácil.
+            </p>
+
+            <div class="privacy-badge">
+                <span class="privacy-icon">🔒</span>
+                <span>Nada fica salvo. Eu só uso o que você preencher agora.</span>
+            </div>
+        </section>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="tab-item active">
+                <span>PriorizAI</span>
+            </button>
+            <button class="tab-item" disabled>
+                <span>Em breve 2</span>
+            </button>
+            <button class="tab-item" disabled>
+                <span>Em breve 3</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="content-grid">
+            <!-- Input Card -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon">⚙️</div>
+                    <h2 class="card-title">Configuração</h2>
+                </div>
+
+                <!-- User Name -->
+                <div class="form-section">
+                    <div class="section-label">Identificação</div>
+                    <label>Seu nome <span class="required">*</span></label>
+                    <input type="text" id="userName" placeholder="Ex.: Felipe Castelão" required>
+                </div>
+
+                <!-- Method Selection -->
+                <div class="form-section">
+                    <div class="section-label">Método de Priorização</div>
+                    <p class="hint-text">Por enquanto, só o primeiro está liberado.</p>
+                    <div class="method-grid">
+                        <div class="method-card active" data-method="IMPACT_EFFORT">
+                            <div class="method-name">
+                                Impacto e Esforço
+                                <span class="help-icon" title="Prioriza o que é mais importante e leva menos tempo.">?</span>
+                            </div>
+                            <div class="method-desc">Foco no que importa mais</div>
+                        </div>
+                        <div class="method-card disabled">
+                            <div class="method-name">
+                                RICE
+                                <span class="help-icon" title="Método mais técnico. Vai liberar depois.">?</span>
+                            </div>
+                            <div class="method-desc">Em breve</div>
+                        </div>
+                        <div class="method-card disabled">
+                            <div class="method-name">
+                                MoSCoW
+                                <span class="help-icon" title="Separa em: obrigatório, importante, bom ter, não agora.">?</span>
+                            </div>
+                            <div class="method-desc">Em breve</div>
+                        </div>
+                        <div class="method-card disabled">
+                            <div class="method-name">
+                                GUT
+                                <span class="help-icon" title="Olha gravidade, urgência e tendência. Vai liberar depois.">?</span>
+                            </div>
+                            <div class="method-desc">Em breve</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tasks Section -->
+                <div class="form-section">
+                    <div class="section-label">Suas Tarefas</div>
+                    <p class="hint-text">Dica: escreva prazo, quem depende, e o que acontece se atrasar. Quanto mais claro, melhor.</p>
+                    <div class="info-alert">
+                        Preencha no mínimo 3 tarefas completas.
+                    </div>
+
+                    <div class="tasks-container" id="tasksContainer">
+                        <!-- Tasks will be added here dynamically -->
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn btn-secondary" id="addTaskBtn">
+                            <span>➕ Adicionar tarefa</span>
+                        </button>
+                        <span class="task-counter" id="taskCounter">3/10</span>
+                    </div>
+
+                    <button class="btn btn-primary btn-full" id="prioritizeBtn" style="margin-top: 2rem;">
+                        <span>✨ Priorizar com IA</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results Card -->
+            <div class="card results-card">
+                <div class="card-header">
+                    <div class="card-icon">📊</div>
+                    <h2 class="card-title">Resultado</h2>
+                </div>
+
+                <div id="resultsContainer">
+                    <div class="result-empty">
+                        <div class="result-empty-icon">🤖</div>
+                        <p>Os resultados vão aparecer aqui depois que você priorizar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Config: URL do Cloudflare Worker
+        const WORKER_BASE_URL = "A_URL_DO_SEU_WORKER";
+
+        // Helper: normaliza a URL
+        function normalizeBaseUrl(url) {
+            if (!url || typeof url !== 'string') return '';
+            url = url.trim();
+            if (url.endsWith('/')) url = url.slice(0, -1);
+            return url;
+        }
+
+        // State
+        let taskCount = 3;
+        const MAX_TASKS = 10;
+
+        // Initialize tasks
+        function initializeTasks() {
+            const container = document.getElementById('tasksContainer');
+            container.innerHTML = '';
+            
+            for (let i = 1; i <= taskCount; i++) {
+                addTaskElement(i);
+            }
+            updateTaskCounter();
+        }
+
+        // Add task element
+        function addTaskElement(index) {
+            const container = document.getElementById('tasksContainer');
+            const taskItem = document.createElement('div');
+            taskItem.className = 'task-item';
+            taskItem.innerHTML = `
+                <div class="task-number">Tarefa ${index.toString().padStart(2, '0')}</div>
+                
+                <div style="margin-bottom: 1rem;">
+                    <label>O que você vai fazer <span class="required">*</span></label>
+                    <input type="text" class="task-title" placeholder="Ex.: Enviar planilha para o fornecedor" required>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <label>Explique bem <span class="required">*</span></label>
+                    <textarea class="task-desc" placeholder="Ex.: Enviar a planilha X para o fornecedor Y até 16h. Se atrasar, o pedido de amanhã pode travar." required></textarea>
+                </div>
+
+                <div class="two-col">
+                    <div>
+                        <label>
+                            Quão importante isso é agora
+                            <span class="help-icon" title="Pense no que você ganha ou evita. Se tem prazo, aumenta a importância.">?</span>
+                        </label>
+                        <select class="task-importance">
+                            <option value="1">Quase não importa</option>
+                            <option value="2">Importa pouco</option>
+                            <option value="3" selected>Importa</option>
+                            <option value="4">Importa muito</option>
+                            <option value="5">É crítico, não dá para adiar</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label>
+                            Quanto tempo isso leva
+                            <span class="help-icon" title="Escolha o tempo total que você acha que vai gastar de verdade.">?</span>
+                        </label>
+                        <select class="task-time">
+                            <option value="1">Menos de 10 min</option>
+                            <option value="2" selected>10 a 30 min</option>
+                            <option value="3">30 min a 2 horas</option>
+                            <option value="4">2 a 6 horas</option>
+                            <option value="5">Mais de 6 horas</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            container.appendChild(taskItem);
+        }
+
+        // Update task counter
+        function updateTaskCounter() {
+            document.getElementById('taskCounter').textContent = `${taskCount}/${MAX_TASKS}`;
+            document.getElementById('addTaskBtn').disabled = taskCount >= MAX_TASKS;
+        }
+
+        // Add task button
+        document.getElementById('addTaskBtn').addEventListener('click', () => {
+            if (taskCount < MAX_TASKS) {
+                taskCount++;
+                addTaskElement(taskCount);
+                updateTaskCounter();
+            }
+        });
+
+        function getSelectedMethod() {
+            const active = document.querySelector('.method-card.active');
+            return active ? (active.dataset.method || 'IMPACT_EFFORT') : 'IMPACT_EFFORT';
+        }
+
+        // Validate form
+        function validateForm() {
+            const userName = document.getElementById('userName').value.trim();
+            if (!userName) {
+                alert('Por favor, preencha seu nome.');
+                return false;
+            }
+
+            const tasks = Array.from(document.querySelectorAll('.task-item'));
+            const completeTasks = tasks.filter(task => {
+                const title = task.querySelector('.task-title').value.trim();
+                const desc = task.querySelector('.task-desc').value.trim();
+                return title && desc;
+            });
+
+            if (completeTasks.length < 3) {
+                alert('Por favor, preencha no mínimo 3 tarefas completas (título e descrição).');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Collect form data
+        function collectFormData() {
+            const userName = document.getElementById('userName').value.trim();
+            const method = getSelectedMethod();
+
+            const tasks = Array.from(document.querySelectorAll('.task-item'))
+                .map(task => {
+                    const titleEl = task.querySelector('.task-title');
+                    const descEl = task.querySelector('.task-desc');
+                    const impEl = task.querySelector('.task-importance');
+                    const timeEl = task.querySelector('.task-time');
+
+                    const title = titleEl.value.trim();
+                    const description = descEl.value.trim();
+
+                    const importance = parseInt(impEl.value, 10);
+                    const time = parseInt(timeEl.value, 10);
+
+                    const importanceLabel = impEl.options[impEl.selectedIndex]?.text || '';
+                    const timeLabel = timeEl.options[timeEl.selectedIndex]?.text || '';
+
+                    return {
+                        title,
+                        description,
+                        importance,
+                        time,
+                        importanceLabel,
+                        timeLabel
+                    };
+                })
+                .filter(task => task.title && task.description);
+
+            return { userName, method, tasks };
+        }
+
+        // Show loading state
+        function showLoading() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Priorizando a ordem...</div>
+                </div>
+            `;
+        }
+
+        function showError(message) {
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="result-empty">
+                    <div class="result-empty-icon">❌</div>
+                    <p>${message || 'Ops. Algo deu errado. Tente novamente.'}</p>
+                </div>
+            `;
+        }
+
+        async function callWorkerPrioritize(data) {
+            const base = normalizeBaseUrl(WORKER_BASE_URL);
+            if (!base || base === "A_URL_DO_SEU_WORKER") {
+                throw new Error('Você ainda não configurou a URL do Worker no index.html (WORKER_BASE_URL).');
+            }
+
+            const url = `${base}/prioritize`;
+            const resp = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            const text = await resp.text();
+            let json;
+            try { json = JSON.parse(text); } catch { json = null; }
+
+            if (!resp.ok) {
+                const msg = (json && (json.error || json.message)) ? (json.error || json.message) : text;
+                throw new Error(msg || `Erro HTTP ${resp.status}`);
+            }
+
+            return json || {};
+        }
+
+        // Normalize results shape
+        function normalizeResults(raw) {
+            const friendlyMessage = raw.friendlyMessage ?? raw.friendly_message ?? raw.friendlyMessageText ?? '';
+            const summary = raw.summary ?? raw.resumo ?? '';
+            const estimatedTimeSaved =
+                raw.estimatedTimeSaved ??
+                raw.estimated_time_saved_percent ??
+                raw.estimated_time_saved ??
+                raw.estimatedTimeSavedPercent ??
+                null;
+
+            const list = raw.rankedTasks ?? raw.ordered_tasks ?? raw.orderedTasks ?? [];
+
+            const rankedTasks = (Array.isArray(list) ? list : []).map((t, idx) => ({
+                position: t.position ?? (idx + 1),
+                title: t.title ?? t.task_title ?? t.taskTitle ?? '',
+                explanation: t.explanation ?? '',
+                keyPoints: t.keyPoints ?? t.key_points ?? [],
+                tip: t.tip ?? ''
+            }));
+
+            return { friendlyMessage, summary, estimatedTimeSaved, rankedTasks };
+        }
+
+        // Display results
+        function displayResults(rawResults) {
+            const container = document.getElementById('resultsContainer');
+            const results = normalizeResults(rawResults);
+
+            const orderRows = results.rankedTasks.map(t => `
+                <tr>
+                    <td style="font-weight: 700; background: linear-gradient(90deg, var(--accent-teal), var(--accent-purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">${t.position}</td>
+                    <td>${escapeHtml(t.title)}</td>
+                </tr>
+            `).join('');
+
+            const orderTableHTML = `
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 90px;">Ordem</th>
+                            <th>Tarefa</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${orderRows || `<tr><td colspan="2">Sem itens para mostrar.</td></tr>`}
+                    </tbody>
+                </table>
+            `;
+
+            const rankedListHTML = results.rankedTasks.map(task => `
+                <div class="ranked-item">
+                    <div class="ranked-header">
+                        <div class="rank-number">${task.position}</div>
+                        <div class="rank-title">${escapeHtml(task.title)}</div>
+                    </div>
+                    ${task.explanation ? `<div class="rank-explanation">${escapeHtml(task.explanation)}</div>` : ''}
+                    ${Array.isArray(task.keyPoints) && task.keyPoints.length ? `
+                        <ul class="key-points">
+                            ${task.keyPoints.map(point => `<li>${escapeHtml(point)}</li>`).join('')}
+                        </ul>
+                    ` : ''}
+                    ${task.tip ? `<div class="rank-tip">${escapeHtml(task.tip)}</div>` : ''}
+                </div>
+            `).join('');
+
+            const statHTML = (results.estimatedTimeSaved !== null && results.estimatedTimeSaved !== undefined)
+                ? `<div class="result-stat">📊 Tempo economizado estimado: ${results.estimatedTimeSaved}%</div>`
+                : '';
+
+            container.innerHTML = `
+                <div class="result-header">
+                    <div class="result-message">${escapeHtml(results.friendlyMessage || 'Aqui vai sua ordem de execução.')}</div>
+                    ${results.summary ? `<div class="result-summary">${escapeHtml(results.summary)}</div>` : ''}
+                    ${statHTML}
+                </div>
+
+                ${orderTableHTML}
+
+                <div class="ranked-list">
+                    ${rankedListHTML || `
+                        <div class="result-empty">
+                            <div class="result-empty-icon">📋</div>
+                            <p>Não consegui montar a lista. Tente de novo.</p>
+                        </div>
+                    `}
+                </div>
+            `;
+
+            // Scroll to results on mobile
+            if (window.innerWidth <= 1200) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function escapeHtml(str) {
+            return String(str || '')
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        function setBusy(isBusy) {
+            const btn = document.getElementById('prioritizeBtn');
+            btn.disabled = !!isBusy;
+            btn.style.opacity = isBusy ? '0.75' : '1';
+        }
+
+        // Prioritize button click
+        document.getElementById('prioritizeBtn').addEventListener('click', async () => {
+            if (!validateForm()) return;
+
+            // Sobe para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const formData = collectFormData();
+            showLoading();
+            setBusy(true);
+
+            try {
+                const results = await callWorkerPrioritize(formData);
+                displayResults(results);
+            } catch (error) {
+                showError(error?.message || 'Ops. Algo deu errado. Tente novamente.');
+            } finally {
+                setBusy(false);
+            }
+        });
+
+        // Method card selection (only enabled ones can toggle)
+        document.querySelectorAll('.method-card:not(.disabled)').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+        });
+
+        // Initialize
+        initializeTasks();
+    </script>
+</body>
+</html>
