@@ -39,11 +39,6 @@
             75% { transform: translateY(20px) translateX(10px); }
         }
 
-        @keyframes wave {
-            0%, 100% { transform: translateX(-50%) translateY(0); }
-            50% { transform: translateX(-50%) translateY(-20px); }
-        }
-
         @keyframes pulse {
             0%, 100% { opacity: 1; transform: scale(1); }
             50% { opacity: 0.5; transform: scale(1.05); }
@@ -57,11 +52,6 @@
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideInRight {
-            from { opacity: 0; transform: translateX(30px); }
-            to { opacity: 1; transform: translateX(0); }
         }
 
         @keyframes rotate {
@@ -84,6 +74,10 @@
         @keyframes shimmerSweep {
             0% { left: -100%; }
             100% { left: 200%; }
+        }
+
+        @keyframes expandWidth {
+            to { width: 200px; }
         }
 
         body {
@@ -182,7 +176,7 @@
         /* Header - Minimal and Powerful */
         .header {
             text-align: center;
-            padding: 4rem 0 3rem;
+            padding: 3rem 0 2rem;
             position: relative;
         }
 
@@ -202,7 +196,7 @@
 
         /* Logo */
         .logo {
-            font-size: 5rem;
+            font-size: 4rem;
             font-weight: 800;
             letter-spacing: -0.05em;
             margin-bottom: 1rem;
@@ -227,7 +221,6 @@
                 0 0 40px var(--glow-cyan);
         }
 
-        /* Animated underline */
         .logo::after {
             content: '';
             position: absolute;
@@ -241,19 +234,16 @@
             animation: expandWidth 1s ease-out 0.5s forwards;
         }
 
-        @keyframes expandWidth {
-            to { width: 200px; }
-        }
-
-        .tagline {
-            font-size: 1.25rem;
+        .module-description {
+            font-size: 1.125rem;
             color: var(--text-secondary);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
             font-weight: 400;
-            max-width: 600px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
             animation: fadeInUp 0.8s ease-out 0.3s both;
+            min-height: 1.5em;
         }
 
         .privacy-pill {
@@ -282,11 +272,54 @@
             animation: shimmerSweep 3s ease-in-out infinite;
         }
 
-        .privacy-icon {
-            font-size: 0.875rem;
+        /* Module Tabs */
+        .module-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
         }
 
-        /* Main Content - New Layout */
+        .module-tab {
+            padding: 1rem 2rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .module-tab.active {
+            background: rgba(0, 217, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+        }
+
+        .module-tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 10px var(--glow-cyan);
+        }
+
+        .module-tab:not(.active):hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(0, 217, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Main Content */
         .main-wrapper {
             position: relative;
         }
@@ -340,6 +373,11 @@
 
         .fab:active {
             transform: scale(1.05) rotate(90deg);
+        }
+
+        .fab:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
         }
 
         /* Section Container */
@@ -452,6 +490,15 @@
             font-weight: 700;
             color: var(--text-primary);
             letter-spacing: -0.02em;
+        }
+
+        /* Module Content */
+        .module-content {
+            display: none;
+        }
+
+        .module-content.active {
+            display: block;
         }
 
         /* Form Elements */
@@ -726,10 +773,6 @@
         }
 
         /* Results Section */
-        .results-wrapper {
-            animation: slideInRight 0.6s ease-out 0.8s both;
-        }
-
         .result-empty {
             text-align: center;
             padding: 4rem 2rem;
@@ -969,6 +1012,56 @@
             line-height: 1.6;
         }
 
+        /* CalmAI specific styles */
+        .calmai-response {
+            background: rgba(0, 217, 255, 0.05);
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            border-radius: 12px;
+            padding: 2rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: 1.0625rem;
+        }
+
+        /* BriefAI specific styles */
+        .brief-section {
+            margin-bottom: 2rem;
+        }
+
+        .brief-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 0.75rem;
+        }
+
+        .brief-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            white-space: pre-line;
+        }
+
+        .brief-list {
+            list-style: none;
+            margin-top: 0.75rem;
+        }
+
+        .brief-list li {
+            padding-left: 2rem;
+            position: relative;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .brief-list li::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: var(--accent-cyan);
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container {
@@ -976,10 +1069,10 @@
             }
 
             .logo {
-                font-size: 3.5rem;
+                font-size: 3rem;
             }
 
-            .tagline {
+            .module-description {
                 font-size: 1rem;
             }
 
@@ -1008,6 +1101,16 @@
             .rank-number {
                 font-size: 2.5rem;
             }
+
+            .module-tabs {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .module-tab {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -1031,99 +1134,32 @@
             <h1 class="logo">
                 <span class="logo-text">Prioriz</span><span class="logo-ai">AI</span>
             </h1>
-            <p class="tagline">
+            <p class="module-description" id="moduleDescription">
                 Você escreve suas tarefas. Eu coloco na melhor ordem e explico de um jeito fácil.
             </p>
             <div class="privacy-pill">
-                <span class="privacy-icon">🔒</span>
+                <span>🔒</span>
                 <span>Nada fica salvo. Privacidade total.</span>
             </div>
         </header>
 
+        <!-- Module Tabs -->
+        <div class="module-tabs">
+            <button class="module-tab active" data-module="priorizai">
+                PriorizAI
+            </button>
+            <button class="module-tab" data-module="calmai">
+                CalmAI
+            </button>
+            <button class="module-tab" data-module="briefai">
+                BriefAI
+            </button>
+        </div>
+
         <!-- Main Content -->
         <div class="main-wrapper">
-            <!-- User Info Section -->
-            <section class="section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <span>👤</span>
-                    </div>
-                    <h2 class="section-title">Identificação</h2>
-                </div>
-                <div class="form-group">
-                    <label class="label">Seu nome <span class="required">*</span></label>
-                    <input type="text" id="userName" placeholder="Ex.: Felipe Castelão" required>
-                </div>
-            </section>
-
-            <!-- Method Section -->
-            <section class="section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <span>⚡</span>
-                    </div>
-                    <h2 class="section-title">Método de Priorização</h2>
-                </div>
-                <div class="method-grid">
-                    <div class="method-card active" data-method="IMPACT_EFFORT">
-                        <div class="method-name">
-                            Impacto e Esforço
-                            <span class="help-badge" title="Prioriza o que é mais importante e leva menos tempo.">?</span>
-                        </div>
-                        <div class="method-desc">Foco no que importa mais</div>
-                    </div>
-                    <div class="method-card disabled">
-                        <div class="method-name">
-                            RICE
-                            <span class="help-badge" title="Método técnico. Em breve.">?</span>
-                        </div>
-                        <div class="method-desc">Em breve</div>
-                    </div>
-                    <div class="method-card disabled">
-                        <div class="method-name">
-                            MoSCoW
-                            <span class="help-badge" title="Categorização por necessidade. Em breve.">?</span>
-                        </div>
-                        <div class="method-desc">Em breve</div>
-                    </div>
-                    <div class="method-card disabled">
-                        <div class="method-name">
-                            GUT
-                            <span class="help-badge" title="Análise de gravidade. Em breve.">?</span>
-                        </div>
-                        <div class="method-desc">Em breve</div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Tasks Section -->
-            <section class="section">
-                <div class="section-header">
-                    <div class="section-icon">
-                        <span>📋</span>
-                    </div>
-                    <h2 class="section-title">Suas Tarefas</h2>
-                </div>
-
-                <div class="alert">
-                    <span class="alert-icon">⚡</span>
-                    <span>Preencha no mínimo 3 tarefas completas para priorizar</span>
-                </div>
-
-                <div class="task-list" id="taskList">
-                    <!-- Tasks will be added here -->
-                </div>
-
-                <div class="button-group">
-                    <button class="btn btn-secondary" id="addTaskBtn">
-                        <span>➕ Adicionar tarefa</span>
-                    </button>
-                    <span class="counter" id="taskCounter">3/10</span>
-                </div>
-            </section>
-
-            <!-- Results Section -->
-            <section class="section results-wrapper">
+            <!-- RESULTS SECTION - NO TOPO -->
+            <section class="section" id="resultsSection" style="display: none;">
                 <div class="section-header">
                     <div class="section-icon">
                         <span>📊</span>
@@ -1134,16 +1170,169 @@
                 <div id="resultsContainer">
                     <div class="result-empty">
                         <div class="result-icon">🤖</div>
-                        <p>Os resultados aparecerão aqui após a priorização</p>
+                        <p>Os resultados aparecerão aqui</p>
                     </div>
                 </div>
             </section>
+
+            <!-- MODULE: PriorizAI -->
+            <div class="module-content active" data-module="priorizai">
+                <!-- User Info Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>👤</span>
+                        </div>
+                        <h2 class="section-title">Identificação</h2>
+                    </div>
+                    <div class="form-group">
+                        <label class="label">Seu nome <span class="required">*</span></label>
+                        <input type="text" id="userName" placeholder="Ex.: Felipe Castelão" required>
+                    </div>
+                </section>
+
+                <!-- Method Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>⚡</span>
+                        </div>
+                        <h2 class="section-title">Método de Priorização</h2>
+                    </div>
+                    <div class="method-grid">
+                        <div class="method-card active" data-method="impact_effort">
+                            <div class="method-name">
+                                Impacto e Esforço
+                                <span class="help-badge" title="Prioriza o que é mais importante e leva menos tempo.">?</span>
+                            </div>
+                            <div class="method-desc">Foco no que importa mais</div>
+                        </div>
+                        <div class="method-card disabled">
+                            <div class="method-name">
+                                RICE
+                                <span class="help-badge" title="Método técnico. Em breve.">?</span>
+                            </div>
+                            <div class="method-desc">Em breve</div>
+                        </div>
+                        <div class="method-card disabled">
+                            <div class="method-name">
+                                MoSCoW
+                                <span class="help-badge" title="Categorização por necessidade. Em breve.">?</span>
+                            </div>
+                            <div class="method-desc">Em breve</div>
+                        </div>
+                        <div class="method-card disabled">
+                            <div class="method-name">
+                                GUT
+                                <span class="help-badge" title="Análise de gravidade. Em breve.">?</span>
+                            </div>
+                            <div class="method-desc">Em breve</div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Tasks Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>📋</span>
+                        </div>
+                        <h2 class="section-title">Suas Tarefas</h2>
+                    </div>
+
+                    <div class="alert">
+                        <span class="alert-icon">⚡</span>
+                        <span>Preencha no mínimo 3 tarefas completas para priorizar</span>
+                    </div>
+
+                    <div class="task-list" id="taskList">
+                        <!-- Tasks will be added here -->
+                    </div>
+
+                    <div class="button-group">
+                        <button class="btn btn-secondary" id="addTaskBtn">
+                            <span>➕ Adicionar tarefa</span>
+                        </button>
+                        <span class="counter" id="taskCounter">3/10</span>
+                    </div>
+                </section>
+            </div>
+
+            <!-- MODULE: CalmAI -->
+            <div class="module-content" data-module="calmai">
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>👤</span>
+                        </div>
+                        <h2 class="section-title">Identificação</h2>
+                    </div>
+                    <div class="form-group">
+                        <label class="label">Seu nome <span class="required">*</span></label>
+                        <input type="text" id="calmaiUserName" placeholder="Ex.: Maria Silva" required>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>💭</span>
+                        </div>
+                        <h2 class="section-title">O que está te incomodando?</h2>
+                    </div>
+
+                    <div class="alert">
+                        <span class="alert-icon">💡</span>
+                        <span>Conte seu problema. A Diva do Caos vai te provocar e ajudar!</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">Desabafe aqui <span class="required">*</span></label>
+                        <textarea id="calmaiText" placeholder="Ex.: Estou sobrecarregado com o trabalho e não consigo me organizar..." style="min-height: 150px;" required></textarea>
+                    </div>
+                </section>
+            </div>
+
+            <!-- MODULE: BriefAI -->
+            <div class="module-content" data-module="briefai">
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>👤</span>
+                        </div>
+                        <h2 class="section-title">Identificação</h2>
+                    </div>
+                    <div class="form-group">
+                        <label class="label">Seu nome <span class="required">*</span></label>
+                        <input type="text" id="briefaiUserName" placeholder="Ex.: João Costa" required>
+                    </div>
+                </section>
+
+                <section class="section">
+                    <div class="section-header">
+                        <div class="section-icon">
+                            <span>📄</span>
+                        </div>
+                        <h2 class="section-title">Seu Contexto ou Situação</h2>
+                    </div>
+
+                    <div class="alert">
+                        <span class="alert-icon">📝</span>
+                        <span>Cole ou escreva o texto que precisa de um briefing estruturado</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="label">Texto para análise <span class="required">*</span></label>
+                        <textarea id="briefaiText" placeholder="Ex.: Estou montando um projeto de e-commerce para vender produtos artesanais. Preciso definir público-alvo, plataforma, estratégia de marketing..." style="min-height: 200px;" required></textarea>
+                    </div>
+                </section>
+            </div>
         </div>
     </div>
 
     <!-- Floating Action Button -->
     <div class="fab-container">
-        <button class="fab" id="prioritizeBtn" title="Priorizar com IA">
+        <button class="fab" id="processBtn" title="Processar com IA">
             <span>✨</span>
         </button>
     </div>
@@ -1152,6 +1341,18 @@
         // Config
         const WORKER_BASE_URL = "A_URL_DO_SEU_WORKER";
 
+        // Module descriptions
+        const MODULE_DESCRIPTIONS = {
+            priorizai: "Você escreve suas tarefas. Eu coloco na melhor ordem e explico de um jeito fácil.",
+            calmai: "Conte seu problema. A Diva do Caos vai te provocar, cutucar e te ajudar a ver de outro jeito.",
+            briefai: "Cole qualquer texto bagunçado. Eu transformo em um briefing organizado e objetivo."
+        };
+
+        // Current module state
+        let currentModule = 'priorizai';
+        let taskCount = 3;
+        const MAX_TASKS = 10;
+
         function normalizeBaseUrl(url) {
             if (!url || typeof url !== 'string') return '';
             url = url.trim();
@@ -1159,11 +1360,33 @@
             return url;
         }
 
-        // State
-        let taskCount = 3;
-        const MAX_TASKS = 10;
+        // Module switching
+        document.querySelectorAll('.module-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const module = tab.dataset.module;
+                switchModule(module);
+            });
+        });
 
-        // Initialize
+        function switchModule(module) {
+            currentModule = module;
+            
+            // Update tabs
+            document.querySelectorAll('.module-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.module-tab[data-module="${module}"]`).classList.add('active');
+            
+            // Update content
+            document.querySelectorAll('.module-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.module-content[data-module="${module}"]`).classList.add('active');
+            
+            // Update description
+            document.getElementById('moduleDescription').textContent = MODULE_DESCRIPTIONS[module];
+            
+            // Hide results when switching modules
+            document.getElementById('resultsSection').style.display = 'none';
+        }
+
+        // PriorizAI - Task management
         function initializeTasks() {
             const container = document.getElementById('taskList');
             container.innerHTML = '';
@@ -1237,81 +1460,141 @@
             }
         });
 
-        function getSelectedMethod() {
-            const active = document.querySelector('.method-card.active');
-            return active ? (active.dataset.method || 'IMPACT_EFFORT') : 'IMPACT_EFFORT';
-        }
+        // Method selection
+        document.querySelectorAll('.method-card:not(.disabled)').forEach(card => {
+            card.addEventListener('click', () => {
+                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+                card.classList.add('active');
+            });
+        });
 
-        function validateForm() {
+        // Main process button
+        document.getElementById('processBtn').addEventListener('click', async () => {
+            if (currentModule === 'priorizai') {
+                await processPriorizAI();
+            } else if (currentModule === 'calmai') {
+                await processCalmAI();
+            } else if (currentModule === 'briefai') {
+                await processBriefAI();
+            }
+        });
+
+        // Validation and API calls for each module
+        async function processPriorizAI() {
             const userName = document.getElementById('userName').value.trim();
             if (!userName) {
                 alert('Por favor, preencha seu nome.');
-                return false;
+                return;
             }
-
-            const tasks = Array.from(document.querySelectorAll('.task-card'));
-            const completeTasks = tasks.filter(task => {
-                const title = task.querySelector('.task-title').value.trim();
-                const desc = task.querySelector('.task-desc').value.trim();
-                return title && desc;
-            });
-
-            if (completeTasks.length < 3) {
-                alert('Por favor, preencha no mínimo 3 tarefas completas.');
-                return false;
-            }
-
-            return true;
-        }
-
-        function collectFormData() {
-            const userName = document.getElementById('userName').value.trim();
-            const method = getSelectedMethod();
 
             const tasks = Array.from(document.querySelectorAll('.task-card'))
                 .map(task => {
                     const title = task.querySelector('.task-title').value.trim();
                     const description = task.querySelector('.task-desc').value.trim();
                     const importance = parseInt(task.querySelector('.task-importance').value, 10);
-                    const time = parseInt(task.querySelector('.task-time').value, 10);
+                    const time_cost = parseInt(task.querySelector('.task-time').value, 10);
                     
                     const impEl = task.querySelector('.task-importance');
                     const timeEl = task.querySelector('.task-time');
-                    const importanceLabel = impEl.options[impEl.selectedIndex]?.text || '';
-                    const timeLabel = timeEl.options[timeEl.selectedIndex]?.text || '';
+                    const importance_label = impEl.options[impEl.selectedIndex]?.text || '';
+                    const time_label = timeEl.options[timeEl.selectedIndex]?.text || '';
 
-                    return { title, description, importance, time, importanceLabel, timeLabel };
+                    return { title, description, importance, time_cost, importance_label, time_label };
                 })
                 .filter(task => task.title && task.description);
 
-            return { userName, method, tasks };
+            if (tasks.length < 3) {
+                alert('Por favor, preencha no mínimo 3 tarefas completas.');
+                return;
+            }
+
+            const method = document.querySelector('.method-card.active')?.dataset.method || 'impact_effort';
+
+            showLoading();
+            setBusy(true);
+
+            try {
+                const data = await callAPI('/prioritize', {
+                    name: userName,
+                    method: method,
+                    tasks: tasks
+                });
+                displayPriorizAIResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                setBusy(false);
+            }
         }
 
-        function showLoading() {
-            document.getElementById('resultsContainer').innerHTML = `
-                <div class="loading">
-                    <div class="spinner"></div>
-                    <div class="loading-text">Processando prioridades...</div>
-                </div>
-            `;
+        async function processCalmAI() {
+            const userName = document.getElementById('calmaiUserName').value.trim();
+            const text = document.getElementById('calmaiText').value.trim();
+
+            if (!userName) {
+                alert('Por favor, preencha seu nome.');
+                return;
+            }
+
+            if (!text || text.length < 10) {
+                alert('Por favor, escreva pelo menos 10 caracteres sobre seu problema.');
+                return;
+            }
+
+            showLoading();
+            setBusy(true);
+
+            try {
+                const data = await callAPI('/calmai', {
+                    name: userName,
+                    text: text
+                });
+                displayCalmAIResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                setBusy(false);
+            }
         }
 
-        function showError(message) {
-            document.getElementById('resultsContainer').innerHTML = `
-                <div class="result-empty">
-                    <div class="result-icon">❌</div>
-                    <p>${message || 'Erro ao processar. Tente novamente.'}</p>
-                </div>
-            `;
+        async function processBriefAI() {
+            const userName = document.getElementById('briefaiUserName').value.trim();
+            const text = document.getElementById('briefaiText').value.trim();
+
+            if (!userName) {
+                alert('Por favor, preencha seu nome.');
+                return;
+            }
+
+            if (!text || text.length < 20) {
+                alert('Por favor, escreva pelo menos 20 caracteres.');
+                return;
+            }
+
+            showLoading();
+            setBusy(true);
+
+            try {
+                const data = await callAPI('/briefai', {
+                    name: userName,
+                    text: text
+                });
+                displayBriefAIResults(data);
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                setBusy(false);
+            }
         }
 
-        async function callWorkerPrioritize(data) {
+        // API call helper
+        async function callAPI(endpoint, data) {
             const base = normalizeBaseUrl(WORKER_BASE_URL);
             if (!base || base === "A_URL_DO_SEU_WORKER") {
                 throw new Error('URL do Worker não configurada.');
             }
 
-            const url = `${base}/prioritize`;
+            const url = `${base}${endpoint}`;
             const resp = await fetch(url, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1330,31 +1613,38 @@
             return json || {};
         }
 
-        function normalizeResults(raw) {
-            const friendlyMessage = raw.friendlyMessage ?? raw.friendly_message ?? '';
-            const summary = raw.summary ?? raw.resumo ?? '';
-            const estimatedTimeSaved = raw.estimatedTimeSaved ?? raw.estimated_time_saved_percent ?? null;
-            const list = raw.rankedTasks ?? raw.ordered_tasks ?? [];
+        // Display results
+        function showLoading() {
+            const section = document.getElementById('resultsSection');
+            section.style.display = 'block';
+            
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div class="loading-text">Processando com IA...</div>
+                </div>
+            `;
 
-            const rankedTasks = (Array.isArray(list) ? list : []).map((t, idx) => ({
-                position: t.position ?? (idx + 1),
-                title: t.title ?? t.task_title ?? '',
-                explanation: t.explanation ?? '',
-                keyPoints: t.keyPoints ?? t.key_points ?? [],
-                tip: t.tip ?? ''
-            }));
-
-            return { friendlyMessage, summary, estimatedTimeSaved, rankedTasks };
+            // Scroll to results
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        function displayResults(rawResults) {
-            const container = document.getElementById('resultsContainer');
-            const results = normalizeResults(rawResults);
+        function showError(message) {
+            document.getElementById('resultsContainer').innerHTML = `
+                <div class="result-empty">
+                    <div class="result-icon">❌</div>
+                    <p>${escapeHtml(message) || 'Erro ao processar. Tente novamente.'}</p>
+                </div>
+            `;
+        }
 
-            const orderRows = results.rankedTasks.map(t => `
+        function displayPriorizAIResults(data) {
+            const container = document.getElementById('resultsContainer');
+            
+            const orderRows = (data.ordered_tasks || []).map(t => `
                 <tr>
                     <td style="color: var(--accent-cyan); font-weight: 700;">${t.position}</td>
-                    <td>${escapeHtml(t.title)}</td>
+                    <td>${escapeHtml(t.task_title)}</td>
                 </tr>
             `).join('');
 
@@ -1370,38 +1660,85 @@
                 </table>
             `;
 
-            const rankedListHTML = results.rankedTasks.map(task => `
+            const rankedListHTML = (data.ordered_tasks || []).map(task => `
                 <div class="ranked-item">
                     <div class="ranked-header">
                         <div class="rank-number">${task.position}</div>
-                        <div class="rank-title">${escapeHtml(task.title)}</div>
+                        <div class="rank-title">${escapeHtml(task.task_title)}</div>
                     </div>
                     ${task.explanation ? `<div class="rank-explanation">${escapeHtml(task.explanation)}</div>` : ''}
-                    ${Array.isArray(task.keyPoints) && task.keyPoints.length ? `
+                    ${Array.isArray(task.key_points) && task.key_points.length ? `
                         <ul class="key-points">
-                            ${task.keyPoints.map(p => `<li>${escapeHtml(p)}</li>`).join('')}
+                            ${task.key_points.map(p => `<li>${escapeHtml(p)}</li>`).join('')}
                         </ul>
                     ` : ''}
                     ${task.tip ? `<div class="rank-tip">${escapeHtml(task.tip)}</div>` : ''}
                 </div>
             `).join('');
 
-            const statHTML = results.estimatedTimeSaved !== null 
-                ? `<div class="stat-badge">📊 Tempo economizado: ${results.estimatedTimeSaved}%</div>` 
+            const statHTML = data.estimated_time_saved_percent !== null && data.estimated_time_saved_percent !== undefined
+                ? `<div class="stat-badge">📊 Tempo economizado: ${data.estimated_time_saved_percent}%</div>` 
                 : '';
 
             container.innerHTML = `
                 <div class="result-header">
-                    <div class="result-message">${escapeHtml(results.friendlyMessage || 'Priorização concluída')}</div>
-                    ${results.summary ? `<div class="result-summary">${escapeHtml(results.summary)}</div>` : ''}
+                    <div class="result-message">${escapeHtml(data.friendly_message || 'Priorização concluída')}</div>
+                    ${data.summary ? `<div class="result-summary">${escapeHtml(data.summary)}</div>` : ''}
                     ${statHTML}
                 </div>
                 ${orderTableHTML}
                 <div class="ranked-list">${rankedListHTML}</div>
             `;
+        }
 
-            // Scroll to results
-            container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        function displayCalmAIResults(data) {
+            const container = document.getElementById('resultsContainer');
+            
+            container.innerHTML = `
+                <div class="result-header">
+                    <div class="result-message">💭 Diva do Caos responde</div>
+                </div>
+                <div class="calmai-response">
+                    ${escapeHtml(data.reply || 'Sem resposta').split('\n').map(p => `<p style="margin-bottom: 1rem;">${p}</p>`).join('')}
+                </div>
+            `;
+        }
+
+        function displayBriefAIResults(data) {
+            const container = document.getElementById('resultsContainer');
+            
+            const missingInfoHTML = Array.isArray(data.missingInfo) && data.missingInfo.length 
+                ? `<div class="brief-section">
+                    <div class="brief-title">📌 Informações Faltando</div>
+                    <ul class="brief-list">
+                        ${data.missingInfo.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                    </ul>
+                   </div>`
+                : '';
+
+            const nextStepsHTML = Array.isArray(data.nextSteps) && data.nextSteps.length
+                ? `<div class="brief-section">
+                    <div class="brief-title">🎯 Próximos Passos</div>
+                    <ul class="brief-list">
+                        ${data.nextSteps.map(item => `<li>${escapeHtml(item)}</li>`).join('')}
+                    </ul>
+                   </div>`
+                : '';
+
+            container.innerHTML = `
+                <div class="result-header">
+                    <div class="result-message">${escapeHtml(data.friendlyMessage || 'Briefing gerado')}</div>
+                    ${data.summary ? `<div class="result-summary">${escapeHtml(data.summary)}</div>` : ''}
+                </div>
+
+                <div class="brief-section">
+                    <div class="brief-title">📄 Briefing Estruturado</div>
+                    <div class="brief-content">${escapeHtml(data.brief || '')}</div>
+                </div>
+
+                ${missingInfoHTML}
+                ${nextStepsHTML}
+            `;
         }
 
         function escapeHtml(str) {
@@ -1414,38 +1751,10 @@
         }
 
         function setBusy(isBusy) {
-            const btn = document.getElementById('prioritizeBtn');
+            const btn = document.getElementById('processBtn');
             btn.disabled = !!isBusy;
             btn.style.opacity = isBusy ? '0.6' : '1';
         }
-
-        // FAB Click
-        document.getElementById('prioritizeBtn').addEventListener('click', async () => {
-            if (!validateForm()) return;
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            const formData = collectFormData();
-            showLoading();
-            setBusy(true);
-
-            try {
-                const results = await callWorkerPrioritize(formData);
-                displayResults(results);
-            } catch (error) {
-                showError(error?.message);
-            } finally {
-                setBusy(false);
-            }
-        });
-
-        // Method selection
-        document.querySelectorAll('.method-card:not(.disabled)').forEach(card => {
-            card.addEventListener('click', () => {
-                document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
-                card.classList.add('active');
-            });
-        });
 
         // Initialize
         initializeTasks();
